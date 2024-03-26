@@ -6,18 +6,31 @@ namespace Controllers
 {
     public class CharacterMaterialController : MonoBehaviour
     {
-        public GameObject Character;
-        [SerializeField] private List<Material> _materialList = new List<Material>();
-        
-        public void NextMaterialButton()
+        private Renderer _renderer;
+
+        private void Start()
         {
-            var material = Character.transform.GetChild(0).GetComponent<Renderer>().material;
-            Debug.Log(material);
+            _renderer = transform.GetChild(0).GetComponent<Renderer>();
+            
+            var materialList = MaterialController.Instance.MaterialList;
+            GetMaterial(materialList);
         }
 
-        public void PreviousMaterialButton()
+        public void SaveMaterial(int materialIndex)
         {
+            PlayerPrefs.SetInt(gameObject.name + "MaterialIndex", materialIndex);
+        }
+
+        public void ChangeMaterial(Material material)
+        {
+            _renderer.material = material;
+        }
+
+        private void GetMaterial(List<Material> materialList)
+        {
+            var materialIndex = PlayerPrefs.GetInt(gameObject.name + "MaterialIndex");
             
+            ChangeMaterial(materialList[materialIndex]);
         }
     }
 }
